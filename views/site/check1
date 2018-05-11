@@ -1,0 +1,13 @@
+<?php
+
+
+    use 
+       Html::a('PDF', [
+    'controller/pdf',
+    'id' => $model->id,
+], [
+    'class' => 'btn btn-primary',
+    'target' => '_blank',
+]); 
+
+?>

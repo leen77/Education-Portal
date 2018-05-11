@@ -1,0 +1,185 @@
+<html>
+<head>
+
+  <style>
+      
+  .floating-box
+  {
+    display: inline-block;
+  }
+
+td {
+    padding: 20px;
+}
+
+
+    </style>
+
+    </head>
+
+
+
+
+<?php
+
+    use yii\helpers\Html;
+    use frontend\models\Course;
+    use frontend\models\Tutor;
+    use frontend\models\Userdb;
+    use frontend\models\Temp;
+    use yii\bootstrap\Nav;
+     use yii\bootstrap\NavBar;
+     use yii\web\Session;
+       use frontend\models\Enroll;
+
+
+  $t=Temp::find()->where(['tempid'=>$id])->limit(1)->one();
+  $tutor=Userdb::find()->where(['userid'=>$t->userid])->limit(1)->one();
+  
+ /*$this->title = 'ViewTopic';
+$this->params['breadcrumbs'][] = ['label' => 'UserHome', 'url' => ['userdb/shome']];
+$this->params['breadcrumbs'][] = ['label' => 'ViewCourses', 'url' => ['course/viewcourse1','id'=>$id]];
+$this->params['breadcrumbs'][] = $this->title;*/
+    NavBar::begin();
+   
+echo Nav::widget([
+    'items' => [
+        ['label' => 'Home', 'url' => ['/userdb/shome']],
+        ['label' => 'My Courses', 'url' => ['/course/viewcourse']],
+        ['label' => 'Search Courses', 'url' => ['/course/index1']],
+         ['label' => 'Search Tutor', 'url' => ['/tutor/searchtutor']],
+        ['label' => 'Request Courses', 'url' => ['/request/userrequest']],
+        ['label' => 'LogOut', 'url' => ['/userdb/logout']],
+    ],
+    'options' => ['class' => 'navbar-nav'],
+]);
+NavBar::end();
+
+   
+
+
+ $session=new Session;
+         $email=$session['email'];
+      //  $model=new Enroll ;
+         
+         $u= Userdb::find()->where(['email' => $email])->limit(1)->one();
+
+         $t= Temp::find()->where(['tempid' => $id])->limit(1)->one();
+
+         $e=Enroll::find()->where(['tempid'=>$id ,'userid'=>$u->userid])->limit(1)->one() ;
+    ?>
+
+
+   
+ <h2><b><?php echo $t->topicname;?></b></h2>
+ <!--<h4><b>By <?php echo $tutor->name?></b></h4> -->
+ <h4><b>By <?php echo Html::a($tutor->name,['/temp/viewtutor','id'=>$t->userid])?></b></h4>
+ <h5><b>On <?php echo $t->uploadedon?></b></h4>
+
+<h3> <b>PDF's</b></h3>
+
+
+ <?php
+
+    $str1=$t->pdf;
+    $token=strtok($str1,"+");
+    $c=0;
+
+
+    
+
+   while($token !== false)
+   {
+    $c++;
+
+      ?>
+   
+ 	         
+ 
+   				<div class="col-lg-3">
+ 
+       					<div class="panel panel-default">
+
+       						<div class="panel-body">
+
+       							<p><b><h3><?php echo Html::a('<img src="pdflogo1.png" />',array('/content/viewpdf','content'=>$token)).$t->topicname.'-'.$c?></p></b></h3>
+
+                  
+
+       			
+
+                              
+                              </div>
+                           </div>
+                           </div>
+
+                         
+                    <?php
+
+             $token = strtok("+");
+    	   }
+    
+?>
+
+   
+</br></br></br></br>
+</br></br></br> 
+
+<?php
+
+    $str1=$t->video;
+
+  // if($str1!=0)
+    //  { 
+     echo "<h3> <b>"."Videos"."</b></h3>";
+    $token=strtok($str1,"+");
+    $c1=0;
+
+
+    
+
+   while($token !== false)
+   {
+    $c1++;
+
+      ?>
+
+
+           
+ 
+          <div class="col-lg-3">
+ 
+                <div class="panel panel-default">
+
+                  <div class="panel-body">
+
+                    <p><b><h3><?php echo Html::a('<img src="videologo.png" />',array('/content/viewvideo','id'=>$t->tempid,'video'=>$token)).$t->topicname.'-'.$c1?></p></b></h3>
+
+                           </div>
+                           </div>
+                           </div>
+
+                         
+                    <?php
+
+             $token = strtok("+");
+      //   }
+      }
+    ?>
+
+    </br></br></br></br>
+</br></br></br> 
+     
+     <table style="border-spacing: 10px;">
+      <tr>
+        <td>
+     <b><h4><?php echo Html::a(/*'<img src="like.png" />'*/'Like'. '   '.$t->likes,['/enroll/like','id'=>$t->tempid],['class'=>'btn btn-success']);?></h4></b></td>
+    
+       
+      <td>
+      <b><h4><?php echo Html::a(/*'<img src="Comment.png" />'*/'Comment',array('/comment/commentit','id'=>$t->tempid),['class'=>'btn btn-primary']);?></b></h4>
+    </td>
+
+    
+  </tr>
+</table>     
